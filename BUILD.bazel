@@ -29,3 +29,13 @@ cc_binary(
     }),
     deps = ["//engine:fastbreak_engine"],
 )
+
+cc_binary(
+    name = "fastbreak_franchise_test",
+    srcs = ["tests/franchise_test.cpp"],
+    copts = select({
+        "@bazel_tools//src/conditions:windows": ["/std:c++20"],
+        "//conditions:default": ["-std=c++20"],
+    }),
+    deps = ["//engine:fastbreak_engine"],
+)

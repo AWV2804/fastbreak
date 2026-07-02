@@ -57,3 +57,6 @@ jobs:
 
     - name: Run Persistence Test
       run: bazelisk run //:fastbreak_persistence_test
+
+    - name: Run Franchise Test
+      run: bazelisk run //:fastbreak_franchise_test
