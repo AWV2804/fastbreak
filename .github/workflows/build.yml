@@ -18,6 +18,24 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Mount Bazel Cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/bazel
+          ~/.cache/bazelisk
+          C:/Users/runneradmin/AppData/Local/Bazel
+        key: ${{ runner.os }}-bazel-${{ hashFiles('MODULE.bazel', 'BUILD.bazel', '**/BUILD.bazel') }}
+        restore-keys: |
+          ${{ runner.os }}-bazel-
+
+    - name: Check Bazel Formatting (Buildifier)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        wget -O buildifier https://github.com/bazelbuild/buildtools/releases/download/v8.0.1/buildifier-linux-amd64
+        chmod +x buildifier
+        ./buildifier --mode=check --lint=warn -r .
+
     - name: Build All Targets
       run: bazelisk build //...
 
