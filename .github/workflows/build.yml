@@ -50,13 +50,13 @@ jobs:
         ./buildifier --mode=check --lint=warn -r .
 
     - name: Build All Targets
-      run: bazelisk build //...
+      run: bazelisk build //... --action_env=INCLUDE --action_env=LIB
 
     - name: Run Smoke Test
-      run: bazelisk run //:fastbreak_smoke
+      run: bazelisk run //:fastbreak_smoke --action_env=INCLUDE --action_env=LIB
 
     - name: Run Persistence Test
-      run: bazelisk run //:fastbreak_persistence_test
+      run: bazelisk run //:fastbreak_persistence_test --action_env=INCLUDE --action_env=LIB
 
     - name: Run Franchise Test
-      run: bazelisk run //:fastbreak_franchise_test
+      run: bazelisk run //:fastbreak_franchise_test --action_env=INCLUDE --action_env=LIB
