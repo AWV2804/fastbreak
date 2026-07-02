@@ -1,0 +1,25 @@
+name: Bazel Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build All Targets
+      run: bazelisk build //...
+
+    - name: Run Smoke Test
+      run: bazelisk run //:fastbreak_smoke
