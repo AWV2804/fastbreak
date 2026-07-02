@@ -7,6 +7,7 @@ cc_library(
         "api/simulation_engine.cpp",
         "engine.cpp",
         "game/game_simulator.cpp",
+        "persistence/sqlite_store.cpp",
         "sim/possession_resolver.cpp",
     ],
     hdrs = [
@@ -18,6 +19,7 @@ cc_library(
         "game/game_state.hpp",
         "game/manager_command.hpp",
         "model/player.hpp",
+        "persistence/sqlite_store.hpp",
         "sim/possession_resolver.hpp",
     ],
     copts = select({
@@ -31,6 +33,10 @@ cc_library(
             "-Wextra",
             "-Wpedantic",
         ],
+    }),
+    linkopts = select({
+        "@bazel_tools//src/conditions:windows": ["sqlite3.lib"],
+        "//conditions:default": ["-lsqlite3"],
     }),
     visibility = ["//visibility:public"],
 )
