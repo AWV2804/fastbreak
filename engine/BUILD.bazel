@@ -1,0 +1,28 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "fastbreak_engine",
+    srcs = [
+        "engine.cpp",
+        "sim/possession_resolver.cpp",
+        "game/game_simulator.cpp",
+        "api/json.cpp",
+        "api/simulation_engine.cpp",
+    ],
+    hdrs = [
+        "model/player.hpp",
+        "game/game_state.hpp",
+        "game/manager_command.hpp",
+        "game/game_simulator.hpp",
+        "sim/possession_resolver.hpp",
+        "api/dtos.hpp",
+        "api/json.hpp",
+        "api/simulation_engine.hpp",
+        "core/rng.hpp",
+    ],
+    visibility = ["//visibility:public"],
+    copts = select({
+        "@bazel_tools//src/conditions:windows": ["/std:c++20", "/W4"],
+        "//conditions:default": ["-std=c++20", "-Wall", "-Wextra", "-Wpedantic"],
+    }),
+)

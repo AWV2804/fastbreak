@@ -1,0 +1,11 @@
+# Bazel outputs
+/bazel-*
+
+# macOS files
+.DS_Store
+
+# CMake temporary outputs
+/build/
+/CMakeUserPresets.json
+/.vscode/
+/out/
