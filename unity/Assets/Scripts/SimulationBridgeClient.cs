@@ -39,6 +39,48 @@ public class CommandPayload
 }
 
 [Serializable]
+public class ScheduledGameData
+{
+    public string game_id;
+    public string home_team_id;
+    public string away_team_id;
+    public int day;
+    public bool simulated;
+    public int home_score;
+    public int away_score;
+}
+
+[Serializable]
+public class TeamStandingData
+{
+    public string team_id;
+    public int wins;
+    public int losses;
+    public int points_for;
+    public int points_against;
+}
+
+[Serializable]
+public class RookieProspectData
+{
+    public string prospect_id;
+    public string name;
+    public int age;
+    public int position;
+    public float rating;
+    public float potential;
+}
+
+[Serializable]
+public class TradeResultData
+{
+    public bool accepted;
+    public string reason;
+    public float value_sent;
+    public float value_received;
+}
+
+[Serializable]
 public class BridgeResponse
 {
     public bool ok;
@@ -47,6 +89,17 @@ public class BridgeResponse
     public bool running;
     public GameSnapshotData snapshot;
     public CommandPayload command;
+
+    // Franchise fields
+    public int current_day;
+    public string[] logs;
+    public TeamStandingData[] standings;
+    public ScheduledGameData[] schedule;
+    public TradeResultData result;
+    public bool success;
+    public RookieProspectData[] prospects;
+    public string[] order;
+    public string drafted_name;
 }
 
 public class SimulationBridgeClient : MonoBehaviour
@@ -110,6 +163,64 @@ public class SimulationBridgeClient : MonoBehaviour
     {
         BridgeResponse response = Send($"command {commandName}");
         return response.command;
+    }
+
+    // --- FRANCHISE MODE APIS ---
+    
+    public int InitFranchise()
+    {
+        BridgeResponse response = Send("franchise_init");
+        return response.current_day;
+    }
+
+    public BridgeResponse SimulateFranchiseDay(string playerTeamId)
+    {
+        return Send($"franchise_simulate_day {playerTeamId}");
+    }
+
+    public TeamStandingData[] GetFranchiseStandings()
+    {
+        BridgeResponse response = Send("franchise_standings");
+        return response.standings;
+    }
+
+    public ScheduledGameData[] GetFranchiseSchedule()
+    {
+        BridgeResponse response = Send("franchise_schedule");
+        return response.schedule;
+    }
+
+    public TradeResultData EvaluateFranchiseTrade(string teamA, string teamB, string[] sentIds, string[] recvIds)
+    {
+        string sent = string.Join(",", sentIds);
+        string recv = string.Join(",", recvIds);
+        BridgeResponse response = Send($"franchise_trade_evaluate {teamA} {teamB} {sent} {recv}");
+        return response.result;
+    }
+
+    public bool ExecuteFranchiseTrade(string teamA, string teamB, string[] sentIds, string[] recvIds)
+    {
+        string sent = string.Join(",", sentIds);
+        string recv = string.Join(",", recvIds);
+        BridgeResponse response = Send($"franchise_trade_execute {teamA} {teamB} {sent} {recv}");
+        return response.success;
+    }
+
+    public RookieProspectData[] GetDraftClass()
+    {
+        BridgeResponse response = Send("franchise_draft_class");
+        return response.prospects;
+    }
+
+    public string[] GetDraftOrder()
+    {
+        BridgeResponse response = Send("franchise_draft_order");
+        return response.order;
+    }
+
+    public BridgeResponse ExecuteDraftPick(string teamId, string prospectId, string type)
+    {
+        return Send($"franchise_draft_pick {teamId} {prospectId} {type}");
     }
 
     public void Shutdown()

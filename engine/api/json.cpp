@@ -81,3 +81,53 @@ std::string toJson(const CommandValidation& validation) {
     out << "}";
     return out.str();
 }
+
+std::string toJson(const ScheduledGame& game) {
+    std::ostringstream out;
+    out << "{";
+    out << "\"game_id\":\"" << escapeJson(game.game_id) << "\",";
+    out << "\"home_team_id\":\"" << escapeJson(game.home_team_id) << "\",";
+    out << "\"away_team_id\":\"" << escapeJson(game.away_team_id) << "\",";
+    out << "\"day\":" << game.day << ",";
+    out << "\"simulated\":" << jsonBool(game.simulated) << ",";
+    out << "\"home_score\":" << game.home_score << ",";
+    out << "\"away_score\":" << game.away_score;
+    out << "}";
+    return out.str();
+}
+
+std::string toJson(const TeamStanding& standing) {
+    std::ostringstream out;
+    out << "{";
+    out << "\"team_id\":\"" << escapeJson(standing.team_id) << "\",";
+    out << "\"wins\":" << standing.wins << ",";
+    out << "\"losses\":" << standing.losses << ",";
+    out << "\"points_for\":" << standing.points_for << ",";
+    out << "\"points_against\":" << standing.points_against;
+    out << "}";
+    return out.str();
+}
+
+std::string toJson(const RookieProspect& prospect) {
+    std::ostringstream out;
+    out << "{";
+    out << "\"prospect_id\":\"" << escapeJson(prospect.prospect_id) << "\",";
+    out << "\"name\":\"" << escapeJson(prospect.name) << "\",";
+    out << "\"age\":" << prospect.age << ",";
+    out << "\"position\":" << static_cast<int>(prospect.position) << ",";
+    out << "\"rating\":" << prospect.ratings.current.mid_range << ",";
+    out << "\"potential\":" << prospect.ratings.potential.mid_range;
+    out << "}";
+    return out.str();
+}
+
+std::string toJson(const TradeResult& result) {
+    std::ostringstream out;
+    out << "{";
+    out << "\"accepted\":" << jsonBool(result.accepted) << ",";
+    out << "\"reason\":\"" << escapeJson(result.reason) << "\",";
+    out << "\"value_sent\":" << result.value_sent << ",";
+    out << "\"value_received\":" << result.value_received;
+    out << "}";
+    return out.str();
+}
