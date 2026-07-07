@@ -28,6 +28,7 @@ cc_library(
         "@bazel_tools//src/conditions:windows": [
             "/std:c++20",
             "/W4",
+            "/IC:\\vcpkg\\installed\\x64-windows\\include",
         ],
         "//conditions:default": [
             "-std=c++20",
@@ -37,7 +38,10 @@ cc_library(
         ],
     }),
     linkopts = select({
-        "@bazel_tools//src/conditions:windows": ["sqlite3.lib"],
+        "@bazel_tools//src/conditions:windows": [
+            "/LIBPATH:C:\\vcpkg\\installed\\x64-windows\\lib",
+            "sqlite3.lib",
+        ],
         "//conditions:default": ["-lsqlite3"],
     }),
     visibility = ["//visibility:public"],
